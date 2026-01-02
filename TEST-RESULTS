@@ -1,0 +1,89 @@
+TEST-RESULTS
+1. Sistemsko testiranje (Black Box)
+
+Testirali smo kalkulator unosom različitih aritmetičkih izraza i proverom rezultata.
+
+1.1 Osnovne operacije
+Ulaz	Očekivani rezultat	Rezultat	Zapažanje
+2+3   	5.0	                5.0	    Radi ispravno
+5-2   	3.0	                3.0	    Radi ispravno
+4*3	    12.0              	12.0	  Radi ispravno
+8/2	    4.0	                4.0   	Radi ispravno
+
+1.2 Prioritet operacija
+Ulaz	Očekivani rezultat	Rezultat	Zapažanje
+2+3*4	  14.0	              14.0   	Prioritet množenja radi ispravno
+10-2*3	4.0	                4.0	    Prioritet množenja radi ispravno
+20/4+2	7.0	                7.0	    Prioritet deljenja radi ispravno
+
+1.3 Započinjanje izraza sa + ili -
+Ulaz	Očekivani rezultat	Rezultat	Zapažanje
++3+2	 5.0	               5.0	    Kod dodaje 0 na početku, radi ispravno
+-5+2	-3.0	              -3.0	    Radi ispravno
+
+
+1.4 Deljenje sa nulom
+Ulaz	Očekivani rezultat	Rezultat	Zapažanje
+5/0	  Infinity	          Infinity	Float deljenje po Java pravilu
+0/0 	NaN	                NaN	      Float deljenje po Java pravilu
+
+
+1.5 Pogrešan unos / nevalidni izrazi
+Ulaz	Očekivani rezultat	Rezultat	Zapažanje
+2++3	 ERROR	             ERROR	    Radi ispravno
+5*/2	 ERROR	             ERROR	    Radi ispravno
+abc+3	 ERROR	             ERROR	    Radi ispravno
+1.6 Složeni izrazi
+Ulaz	         Očekivani rezultat	Rezultat	Zapažanje
+10+5*2-3/1	    17.0	              17.0	  Prioritet operacija radi ispravno
+2*3+4*5-6/2	    20.0	              20.0    Prioritet operacija radi ispravno
+
+
+1.7 Detektovani nedostaci / potencijalni problemi
+
+Ako korisnik unese prazan string, kalkulator baca grešku (StringIndexOutOfBoundsException).
+Ako izraz završava sa operatorom, može izazvati grešku prilikom parsiranja.
+Float preciznost može dovesti do zaokruživanja kod velikih brojeva.
+Deljenje sa nulom vraća Infinity ili NaN, što može biti neočekivano za korisnika.
+Dugački izrazi mogu izazvati StackOverflowError zbog rekurzivne metode Calculate.
+
+
+
+2. Jedinični test (JUnit 5)
+
+Testirali smo funkciju Calculate preko javnog Run metoda.
+java
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
+
+public class CalculatorTest {
+
+    @Test
+    void testSimpleAddition() {
+        assertEquals("5.0", Calculator.Run("2+3"));
+    }
+
+    @Test
+    void testOperatorPrecedence() {
+        assertEquals("14.0", Calculator.Run("2+3*4"));
+    }
+
+    @Test
+    void testDivisionByZero() {
+        assertEquals("Infinity", Calculator.Run("5/0"));
+    }
+
+    @Test
+    void testNegativeStart() {
+        assertEquals("-3.0", Calculator.Run("-5+2"));
+    }
+
+    @Test
+    void testInvalidExpression() {
+        assertEquals("ERROR", Calculator.Run("2++3"));
+    }
+}
+
+
+Added TEST-RESULTS with test cases and observations
